@@ -1,9 +1,9 @@
 /*
-Program: The 67 Code
-Creation: Nov 30, 2025
-Contributors: Luke Sedaca
-Team: Raspberry phi [115]
-Use: The code that goes into The 67
+Program: The Punkrocker Code
+Creation: July 5th, 2025
+Contributors: Daniel Principe
+Team: Pink Fluffy Unicorns [83]
+Use: The code that goes into The Punkrocker
 */
 
 // Library Init
@@ -24,18 +24,18 @@ NoU_Motor backRightMotor(4);
 //NoU_Servo leftArmServo(1);
 
 // Elevator Servos Init
- NoU_Servo rightElevatorServo(3);
+//NoU_Servo rightElevatorServo(3);
 //NoU_Servo leftElevatorServo(4);
-float Speed = 1;
+
 // Drive Train Init
 NoU_Drivetrain drivetrain(&frontLeftMotor, &frontRightMotor, &backLeftMotor, &backRightMotor);
 
-float rightElevatorServoDEG = 0;
+//float rightElevatorServoDEG = 0;
 //float leftElevatorServoDEG = 180;
 
 void setup() {
   NoU3.begin();
-  PestoLink.begin("The 67");
+  PestoLink.begin("The Punkrocker");
   // coralIntakeMotors.setInverted(true);
      frontRightMotor.setInverted(false);
      frontLeftMotor.setInverted(true);
@@ -100,25 +100,14 @@ void loop() {
 
     // //---Elevator Servo Code---
     // // Change degrees based on input
-        if (PestoLink.keyHeld(Key::T)){
-      rightElevatorServoDEG = 50;
-      }
-    if (PestoLink.keyHeld(Key::K)) {
-      Speed += 1;
-    }
-        else if (PestoLink.keyHeld(Key::M)) {
-          Speed -= 1;
-      
-    }
-     if (PestoLink.keyHeld(Key::U) && rightElevatorServoDEG<250) {
-       rightElevatorServoDEG += Speed;
+    // if (PestoLink.keyHeld(Key::U) && leftElevatorServoDEG > 0) {
+    //   rightElevatorServoDEG += 1;
     //   leftElevatorServoDEG -= 1;
-     } else if (PestoLink.keyHeld(Key::I)&& rightElevatorServoDEG>0) {
-       rightElevatorServoDEG -= Speed;
+    // } else if (PestoLink.keyHeld(Key::I) && leftElevatorServoDEG < 180) {
+    //   rightElevatorServoDEG -= 1;
     //   leftElevatorServoDEG += 1;
-     }
-  
-    
+    // }
+
     // if (PestoLink.buttonHeld(12) || PestoLink.keyHeld(Key::R)) {
     //   rightElevatorServoDEG = 180 ;
     //   leftElevatorServoDEG = 10 ;
@@ -135,7 +124,7 @@ void loop() {
 
     // // Update elevator servos
     // leftElevatorServo.write(leftElevatorServoDEG);
-     rightElevatorServo.write(rightElevatorServoDEG);
+    // rightElevatorServo.write(rightElevatorServoDEG);
 
     //---Drive Train Code---
     // Axis Init
