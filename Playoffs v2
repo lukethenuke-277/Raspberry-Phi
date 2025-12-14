@@ -1,0 +1,116 @@
+/*
+Program: The 67 Code
+Creation: Nov 30, 2025
+Contributors: Luke Sedaca
+Team: Raspberry phi [115]
+Use: The code that goes into The 67
+*/
+
+// Library Init
+#include <Alfredo_NoU3.h>
+#include <PestoLink-Receive.h>
+
+// Drive Train Motors Init
+NoU_Motor frontLeftMotor(5);
+NoU_Motor frontRightMotor(1);
+NoU_Motor backLeftMotor(8);  
+NoU_Motor backRightMotor(4);
+
+// Scissor Servos Init
+ NoU_Servo ScissorLiftServo(4);
+ NoU_Servo IntakeServo(2);
+
+unsigned Speed = 1;
+// Drive Train Init
+NoU_Drivetrain drivetrain(&frontLeftMotor, &frontRightMotor, &backLeftMotor, &backRightMotor);
+
+float ScissorLiftServoDEG = 0;
+float IntakeServoDEG = 0;
+
+void setup() {
+  NoU3.begin();
+  PestoLink.begin("Not a NoU3");
+
+
+
+  // coralIntakeMotors.setInverted(true);
+     frontRightMotor.setInverted(true);
+     frontLeftMotor.setInverted(true);
+     backLeftMotor.setInverted(true);
+     backRightMotor.setInverted(true);
+     IntakeServo.write(0);
+}
+
+
+void loop() {
+  if (PestoLink.update()) {
+    // Get battery voltage and display on PestoLink
+    float batteryVoltage = NoU3.getBatteryVoltage();
+    PestoLink.printBatteryVoltage(batteryVoltage);
+
+//.    -----  Elevator positions ------
+      if (PestoLink.keyHeld(Key::I) || (PestoLink.buttonHeld(0))) { //intake
+          ScissorLiftServoDEG = -10;
+        }
+       else if (PestoLink.keyHeld(Key::U) || (PestoLink.buttonHeld(3)) ) { //L3
+       ScissorLiftServoDEG = 210;
+       
+      }else if (PestoLink.keyHeld(Key::M)  ) { //L2
+         ScissorLiftServoDEG = 40;
+      }
+       if (PestoLink.keyHeld(Key::Z)) {
+      ScissorLiftServoDEG + 1;
+    
+      }else if (PestoLink.keyHeld(Key::X)){
+        ScissorLiftServoDEG - 1;
+    
+      }
+
+
+      if (PestoLink.keyHeld(Key::Q)){
+        IntakeServoDEG = 0;
+      }
+      else {
+        IntakeServoDEG = 90;
+      }
+
+       
+
+      Serial.print(ScissorLiftServo.getDegrees());
+// Manual elevator adjustments 
+      //else if (PestoLink.buttonHeld(upDPad)){
+        //ScissorLiftServoDEG ++;
+      //}
+
+      // else if (PestoLink.buttonHeld(downDPad)){
+      //   ScissorLiftServoDEG --;
+      // }
+      
+
+// ---- Servo Updates----
+     ScissorLiftServo.write (ScissorLiftServoDEG);
+     IntakeServo.write(IntakeServoDEG);
+
+    //---Drive Train Code---
+
+    // Axis Init
+    float horizontalAxis = 0;
+    float verticalAxis = 0;
+    float rotationalAxis = 0;
+
+    // Retrieve 3 axes from PestoLink and set it to given axis
+    horizontalAxis = 1 * PestoLink.getAxis(0);
+    verticalAxis = -1 * PestoLink.getAxis(1);
+    rotationalAxis = -1 * PestoLink.getAxis(2);
+
+    // Apply axes to drive train
+    drivetrain.holonomicDrive(horizontalAxis, verticalAxis, rotationalAxis);
+
+    
+    drivetrain.curvatureDrive(0, 0); // Stops drifting after code uploads
+    PestoLink.update(); // Required piece of code to update robot on pestolink values
+  
+}
+
+
+}
